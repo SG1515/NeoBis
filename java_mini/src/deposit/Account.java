@@ -15,7 +15,6 @@ public class Account {
 	public Account(Country country, int password) {
 		// XXX-XX-XXXX-XXX
 		this.accountNumber = makeAccountNumber();
-//		 this.accountNumber = accountNumber; -> 랜덤 숫자
 		this.balance = 0;
 		this.trades = new ArrayList<>();
 		this.country = country;

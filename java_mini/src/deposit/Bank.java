@@ -225,6 +225,34 @@ public class Bank {
 			System.out.println("=========== 잔액이 부족합니다 ===========");
 		}
 	}
+	
+	/**
+	 * 거래 내역 출력
+	 */
+	public void printAllTrades() {
+		System.out.println("=========== 거래 내역 출력 ==========");
+		for (Account account : curCustomer.getAccounts()) {
+			account.printAccount();
+		}
+	}
+	
+	/**
+	 * 관리자 로그인
+	 * @param password
+	 */
+	public boolean login(int password) {
+		return (password == PASSWORD);
+	}
+	
+	/**
+	 * 고객 리스트 출력
+	 */
+	public void printAllCustomers() {
+		System.out.println("========== 고객 리스트 출력 ==========");
+		for (Customer customer : customers) {
+			customer.printCustomer();
+		}
+	}
 
 	public void foreignToKWRExchange(Customer depositor, ExchangeRate exchangeRate) throws IOException {
 		System.out.println("고객님의 계좌목록입니다.");
