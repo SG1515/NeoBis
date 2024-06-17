@@ -3,6 +3,7 @@ package deposit;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,8 +31,7 @@ public class AntiMoneyLaundering {
 		}
 		if (suspiciousTransactionReport(customer, amount)) { // 의심 거래 식별 보고
 			return false;
-		} else {
-			currencyTransactionReport(amount); // 일정 금액 이상 현금 거래 보고
+		} else if(currencyTransactionReport(amount)) {// 일정 금액 이상 현금 거래 보고
 			return false;
 		}
 		return true;
@@ -76,9 +76,12 @@ public class AntiMoneyLaundering {
 	}
 
 	// CTR
-	public void currencyTransactionReport(long amonut) {
-		if (amonut >= limit)
+	public boolean currencyTransactionReport(long amonut) {
+		if (amonut >= limit) {
 			System.out.println("원화 1천만원 이상 거래 발견!! 금융정보분석원으로 보고가 완료되었습니다.");
+			return true;
+		}
+		return false;
 	}
 
 	// CDD
@@ -120,7 +123,8 @@ public class AntiMoneyLaundering {
 			System.out.println("직업이 일치하지 않습니다.");
 			return false;
 		}
-
+		customer.setCdd(true);
+		customer.setCddDate(LocalDateTime.now());
 		// 거래 모니터링
 		System.out.println("고객 확인이 완료되었습니다.");
 		return true;
