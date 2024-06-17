@@ -61,6 +61,15 @@ public class Customer {
 		return -1;
 	}
 	
+	public int findAccountByCountry(Country country) {
+		for (int i = 0; i < accounts.size(); i++) {
+			if(accounts.get(i).getCountry().equals(country)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	public void addAccount(Country country, int password) {
 		accounts.add(new Account(country, password));
 	}
