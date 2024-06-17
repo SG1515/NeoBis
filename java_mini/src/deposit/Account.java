@@ -1,5 +1,6 @@
 package deposit;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +35,30 @@ public class Account {
 		// printTrades();
 		System.out.println("국가 : " + country);
 	}
+	
+	public void checkPassword() throws Exception	{
+		String pw = "";
+		while(true) {
+			System.out.print("비밀번호 4자리 입력 > ");
+			pw = DataInput.readLine();
+			
+			if(Integer.parseInt(pw) == this.password) break;
+			System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
+		}
+	}
 
 	public void deposit(long amount){
 		balance += amount;
-		trades.add(new Trade());
+		trades.add(new Trade(trades.size() == 0 ? 1 : trades.size(), amount, true, balance));
+	}
+	
+	public boolean withdraw(long amount) {
+		if(balance >= amount) {
+			balance -= amount;
+			trades.add(new Trade(trades.size() == 0 ? 1 : trades.size(), amount, false, balance));
+			return true;
+		}
+		return false;
 	}
 
 	public String getAccountNumber() {
@@ -71,4 +92,5 @@ public class Account {
 	public void setCountry(Country country) {
 		this.country = country;
 	}
+
 }

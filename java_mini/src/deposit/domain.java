@@ -9,5 +9,7 @@ public class domain {
 		bank.addAccount();
 		
 		bank.deposit();
+		
+		bank.withdraw();
 	}
 }
