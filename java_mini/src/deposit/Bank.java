@@ -260,8 +260,8 @@ public class Bank {
 			}
 		}
 
-		long changed = (long) (changeMoney * ExchangeRate.getExchanges().get(choiceCountry));
-		System.out.println("환전된 금액은 > " + changed + exchangeRate.getCall().get(3));
+		double changed =  ( ((double)changeMoney) * ExchangeRate.getExchanges().get(choiceCountry));
+		System.out.println("환전된 금액은 > " + Math.round(changed) + exchangeRate.getCall().get(3));
 		System.out.println("해당계좌 잔액은 > " + printBalance);
 
 	}
@@ -291,9 +291,14 @@ public class Bank {
 		Country[] arr = Country.values();
 		Country choiceCountry = arr[choiceAccount];
 		String choiceCountryStr = choiceCountry.name();
-
-		System.out.print("환전할 금액을 입력해주세요. > ");
-		long changeMoney = Long.parseLong(DataInput.readLine());
+		
+		long changeMoney = 0;
+		while(true) {
+			System.out.print("환전할 금액을 입력해주세요. > ");
+			changeMoney = Long.parseLong(DataInput.readLine());
+			double tmpExchange = exchangeRate.getExchanges().get(choiceCountry);
+			if (changeMoney >= tmpExchange) break;
+		}
 		long balance = 0;
 		long printBalance = 0;
 
@@ -321,8 +326,8 @@ public class Bank {
 			}
 			idx++;
 		}
-		long changed = (long) (changeMoney / ExchangeRate.getExchanges().get(choiceCountry));
-		System.out.println("환전된 금액은 > " + changed + moneyName);
+		double changed =  ( ((double)changeMoney) / ExchangeRate.getExchanges().get(choiceCountry));
+		System.out.println("환전된 금액은 > " + Math.round(changed) + moneyName);
 		System.out.println("해당계좌 잔액은 > " + printBalance);
 	}
 
