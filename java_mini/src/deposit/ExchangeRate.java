@@ -9,8 +9,10 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ExchangeRate {
-	private static Map<Country, Double> exchanges = new HashMap<>();;
+	private static Map<Country, Double> exchanges = new HashMap<>();
 	private static List<String> call = new ArrayList<>();
+	
+	
 	
 	public ExchangeRate() {
 		
@@ -19,6 +21,11 @@ public class ExchangeRate {
 	public static Map<Country, Double> getExchanges() {
 		return exchanges;
 	}
+
+	
+	// 정적 초기화 블럭
+		static {
+		}
 
 	
 	public static void setExchanges() throws IOException {
@@ -38,18 +45,30 @@ public class ExchangeRate {
 	//정적 초기화 블럭
 	static{
 		exchanges.put(Country.USA, 1200.0);
-		call.add("USD");
 		exchanges.put(Country.CHI, 180.0);
-		call.add("CNY");
 		exchanges.put(Country.JAP, 8.26);
-		call.add("JPY");
 		exchanges.put(Country.KOR, 1.0);
-		call.add("KRW");
 		exchanges.put(Country.UK, 1400.0);
+		call.add("USD");
+		call.add("CNY");
+		call.add("JPY");
+		call.add("KRW");
 		call.add("EUR");
 		
 	}
 	
+	public static List<String> getCall() {
+		return call;
+	}
+
+	public static void setCall(List<String> call) {
+		ExchangeRate.call = call;
+	}
+
+	public static void setExchanges(Map<Country, Double> exchanges) {
+		ExchangeRate.exchanges = exchanges;
+	}
+
 	public static void printExchanges() {
 		
 		TreeMap<Country, Double> sortedMap = new TreeMap<>(exchanges);
@@ -64,13 +83,6 @@ public class ExchangeRate {
 	} 
 	
 
-	public static List<String> getCall() {
-		return call;
-	}
-
-	public static void setCall(List<String> call) {
-		ExchangeRate.call = call;
-	}
 
 	// 환율 계산 메소드 완료
 	// exchangeAmount - 원화로 들어옴 
@@ -83,110 +95,5 @@ public class ExchangeRate {
     }
     
     
-  
-
-	public void foreignToKWRExchange(Customer depositor, ExchangeRate exchangeRate) throws IOException{
-		System.out.println("고객님의 계좌목록입니다.");
-		depositor.printAccounts();
-		System.out.println();
-		
-		System.out.println("1.USA 2.CHI 3.JAP 4.KOR 5.UK");
-		System.out.print("계좌를 선택해주세요. > ");
-		
-		int func = Integer.parseInt(DataInput.readLine());
-		
-		if(func == 4) {
-			System.out.println("계좌 선택을 다시 해주세요.");
-			return;
-		}
-		
-		Country[] arr = Country.values();
-		Country choiceCountry = arr[func-1];
-		String choice = choiceCountry.name();
-		
-		System.out.print("환전할 금액을 입력해주세요. > ");
-		long changeMoney = Long.parseLong(DataInput.readLine());
-		long balance = 0;
-		long printBalance = 0;
-		//고객의 계좌에서 돈을 꺼낼 계좌를 가져오기.
-		for(int i=0; i<depositor.getAccounts().size(); i++) {
-			if(choice.equals(depositor.getAccounts().get(i).getCountry().name())){
-				balance = depositor.getAccounts().get(i).getBalance() - changeMoney;
-				if (balance >= 0) {
-					depositor.getAccounts().get(i).setBalance(balance);
-					printBalance = depositor.getAccounts().get(i).getBalance();
-				} else {
-					System.out.println("잔액이 부족합니다.");
-					return;
-				}
-			}
-		}
-		
-		long changed = (long) (changeMoney * exchangeRate.exchanges.get(choiceCountry));
-		System.out.println("환전된 금액은 > " + changed + call.get(3));
-		System.out.println("해당계좌 잔액은 > " + printBalance);
-				
-	}
-
-	public void KRWToForeignExchange(Customer depositor, ExchangeRate exchangeRate) throws IOException {
-		
-		System.out.println("1.USD 2.CNY 3.JPY 4.EUR");
-		System.out.print("환전하고 싶은 통화를 선택해주세요. >");
-		int tmp = Integer.parseInt(DataInput.readLine());
-		
-		int choiceAccount = 0;
-		//한국 계좌가 있어서 중간 치환해줌.
-		switch(tmp) {
-			case 1:
-				break;
-			case 2:
-				choiceAccount = 1;
-				break;
-			case 3:
-				choiceAccount = 2;
-				break;
-			case 4:
-				choiceAccount = 4;
-				break;
-		}
-		
-		Country[] arr = Country.values();
-		Country choiceCountry = arr[choiceAccount];
-		String choiceCountryStr = choiceCountry.name();
-		
-		
-		System.out.print("환전할 금액을 입력해주세요. > ");
-		long changeMoney = Long.parseLong(DataInput.readLine());
-		long balance = 0;
-		long printBalance = 0;
-		
-		//고객의 계좌에서 돈을 꺼낼 계좌를 가져오기.
-		for(int i=0; i<depositor.getAccounts().size(); i++) {
-			if(choiceCountryStr.equals(depositor.getAccounts().get(i).getCountry().name())){
-				balance = depositor.getAccounts().get(i).getBalance() - changeMoney;
-				if (balance >= 0) {
-					depositor.getAccounts().get(i).setBalance(balance);
-					printBalance = depositor.getAccounts().get(i).getBalance();
-					break;
-				} else {
-					System.out.println("잔액이 부족합니다.");
-					return;
-				}
-			}
-		}
-
-		int idx =0;
-		String moneyName = "";
-		TreeMap<Country, Double> sortedMap = new TreeMap<>(exchanges);
-		for(Map.Entry<Country, Double> entry : sortedMap.entrySet()) {
-			if(entry.getKey().name().equals(choiceCountryStr)) {
-				moneyName = call.get(idx);
-			}
-			idx++;
-		}		
-		long changed = (long) (changeMoney / exchangeRate.exchanges.get(choiceCountry));
-		System.out.println("환전된 금액은 > " + changed +moneyName);
-		System.out.println("해당계좌 잔액은 > " + printBalance);
-	}
  
 }
