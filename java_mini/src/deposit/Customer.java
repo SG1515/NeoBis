@@ -1,5 +1,6 @@
 package deposit;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Customer {
@@ -10,6 +11,8 @@ public class Customer {
 	private String registrationNumber;
 	private String job;
 	private String email;
+	private boolean cdd;
+	private LocalDateTime cddDate;
 
 	private List<Account> accounts;
 
@@ -25,6 +28,8 @@ public class Customer {
 		this.job = job;
 		this.accounts = new ArrayList<>();
 		this.email = email;
+		this.cdd = false;
+		this.cddDate = null;
 	}
 	
 	public void printCustomer(){
@@ -54,10 +59,6 @@ public class Customer {
 		}
 		return -1;
 	}
-	
-//	public void selectCurAccount(int idxAccount) {
-//		curAccount = accounts.get(idxAccount);
-//	}
 	
 	public void addAccount(Country country, int password) {
 		accounts.add(new Account(country, password));
@@ -127,11 +128,19 @@ public class Customer {
 		this.email = email;
 	}
 
-//	public Account getCurAccount() {
-//		return curAccount;
-//	}
-//
-//	public void setCurAccount(Account curAccount) {
-//		this.curAccount = curAccount;
-//	}
+	public boolean isCdd() {
+		return cdd;
+	}
+
+	public void setCdd(boolean cdd) {
+		this.cdd = cdd;
+	}
+
+	public LocalDateTime getCddDate() {
+		return cddDate;
+	}
+
+	public void setCddDate(LocalDateTime cddDate) {
+		this.cddDate = cddDate;
+	}
 }

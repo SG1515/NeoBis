@@ -25,9 +25,11 @@ public class Bank {
 		System.out.print("찾는 고객의 주민번호를 입력하세요 > ");
 		String registrationNumber = DataInput.readLine();
 		
+		boolean flag = false;
 		for (Customer customer : customers) {
 			if(registrationNumber.equals(customer.getRegistrationNumber())) {
 				curCustomer = customer;
+				flag = true;
 			}
 		}
 	}
