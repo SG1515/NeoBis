@@ -13,6 +13,7 @@ public class Bank {
 	public Bank() {
 		this.customers = new ArrayList<>();
 		customers.add(new Customer("yerim", "010-1111-1111", "서울 강북구", "990101-01010101", "무직", "yerim@naver.com"));
+		customers.add(new Customer("song", "010-1111-1111", "서울 강북구", "990101-01010102", "무직", "yerim@naver.com"));
 	}
 	
 	/**
@@ -24,9 +25,11 @@ public class Bank {
 		System.out.print("찾는 고객의 주민번호를 입력하세요 > ");
 		String registrationNumber = DataInput.readLine();
 		
+		boolean flag = false;
 		for (Customer customer : customers) {
 			if(registrationNumber.equals(customer.getRegistrationNumber())) {
 				curCustomer = customer;
+				flag = true;
 			}
 		}
 	}
@@ -67,11 +70,13 @@ public class Bank {
 		curCustomer.addAccount(countrys[selectCountry-1], Integer.parseInt(pw1));
 		
 		System.out.println("========== 계좌 생성이 완료되었습니다 ==========");
+		
+		curCustomer.getAccounts().get(curCustomer.getAccounts().size()-1).printAccount();
 	}
 	
 	/**
 	 * 입금
-	 * : 자금세탁방지 -> 계좌 리스트 출력 -> 계좌 선택 -> 거래 금액 입력 -> 입금 -> 완료
+	 * : 자금세탁방지 -> 계좌 리스트 출력 -> 계좌 선택 -> 거래 금액 입력 -> 비밀번호 입력 -> 입금 -> 완료
 	 * @throws Exception
 	 */
 	public void deposit() throws Exception {
@@ -84,11 +89,14 @@ public class Bank {
 		// 계좌 선택
 		System.out.print("계좌를 선택해주세요 > ");
 		int idxAccount = Integer.parseInt(DataInput.readLine()) - 1;
-		curCustomer.selectCurAccount(idxAccount);
+//		curCustomer.selectCurAccount(idxAccount);
 		
 		// 거래금액 입력받기
 		System.out.print("입금하실 금액을 입력해주세요 > ");
 		long amount = Long.parseLong(DataInput.readLine());
+		
+		// 비밀번호 입력
+		curCustomer.getAccounts().get(idxAccount).checkPassword();
 		
 		// deposit
 		curCustomer.getAccounts().get(idxAccount).deposit(amount);
@@ -99,9 +107,102 @@ public class Bank {
 	
 	/**
 	 * 출금
-	 * : 자금세탁방지 -> 계좌 ->
+	 * : 자금세탁방지 -> 계좌 리스트 출력 -> 계좌 선택 -> 거래 금액 입력 -> 비밀번호 입력 -> 출금 -> 완료
+	 * @throws IOException 
+	 * @throws NumberFormatException 
 	 */
-	public void withdraw() {
+	public void withdraw() throws Exception {
+		// 자금세탁방지
 		
+		// 계좌 탐색
+		curCustomer.printAccounts();
+
+		// 계좌 선택
+		System.out.print("계좌를 선택해주세요 > ");
+		int idxAccount = Integer.parseInt(DataInput.readLine()) - 1;
+//		curCustomer.selectCurAccount(idxAccount);
+
+		// 거래금액 입력받기
+		System.out.print("출금하실 금액을 입력해주세요 > ");
+		long amount = Long.parseLong(DataInput.readLine());
+		
+		// 비밀번호 입력
+		curCustomer.getAccounts().get(idxAccount).checkPassword();
+
+		// withdraw
+		if(curCustomer.getAccounts().get(idxAccount).withdraw(amount)) {
+			// 완료
+			System.out.println("========== 출금이 완료되었습니다 ==========");
+		} else {
+			// 실패
+			System.out.println("=========== 잔액이 부족합니다 ===========");
+		}
+		
+	}
+	
+	/**
+	 * 송금
+	 * : 자금세탁방지 -> 계좌 리스트 출력 -> 계좌 선택 -> 받는 분 계좌번호 입력 -> 받는 분 일치하는 계좌 찾기
+	 *		-> 거래 금액 입력 -> 비밀번호 입력 -> 출금 -> 입금 -> 완료
+	 * @throws Exception
+	 */
+	public void remittance() throws Exception {
+		// 자금 세탁 방지
+		
+		
+		// 계좌 탐색
+		curCustomer.printAccounts();
+		
+		// 계좌 선택
+		System.out.print("송금 계좌를 선택해주세요 > ");
+		int idxAccount = Integer.parseInt(DataInput.readLine()) - 1;
+//		curCustomer.selectCurAccount(idxAccount);
+		
+
+		Customer recipient = null;
+		int idxRecipientAccount = -1;
+		
+		while(true) {
+			// 받는 분 계좌번호 입력
+			System.out.print("받는 분 계좌번호 입력 > ");
+			String recipientAccountNumber = DataInput.readLine();
+			
+			
+			// 일치하는 계좌 찾기
+			for (int i = 0; i < customers.size(); i++) {
+				idxRecipientAccount = customers.get(i).findAccountByAccountNumber(recipientAccountNumber, curCustomer.getAccounts().get(idxAccount).getCountry());
+
+				if(idxRecipientAccount != -1) {
+					recipient = customers.get(i);
+					break;
+				}
+			}
+			
+			if(idxRecipientAccount == -1) {
+				System.out.print("============== 해당 계좌는 존재하지 않습니다. 다시 입력해주세요. ==============");
+			} else {
+				break;
+			}
+		}
+		
+		// 거래금액 입력받기
+		System.out.print("송금하실 금액을 입력해주세요 > ");
+		long amount = Long.parseLong(DataInput.readLine());
+		
+		// 비밀번호 입력
+		curCustomer.getAccounts().get(idxAccount).checkPassword();
+		
+		// withdraw
+		if(curCustomer.getAccounts().get(idxAccount).withdraw(amount)) {
+			// 입금
+			recipient.getAccounts().get(idxRecipientAccount).deposit(amount);
+			
+			// 완료
+			System.out.println("========== 송금이 완료되었습니다 ==========");
+			
+		} else {
+			// 실패
+			System.out.println("=========== 잔액이 부족합니다 ===========");
+		}
 	}
 }
