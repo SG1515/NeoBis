@@ -8,8 +8,14 @@ public class domain {
 		
 		bank.addAccount();
 		
+		bank.findCustomer();
+		
+		bank.addAccount();
+		
 		bank.deposit();
 		
-		bank.withdraw();
+		bank.remittance();
+		
+//		bank.withdraw();
 	}
 }

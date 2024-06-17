@@ -12,7 +12,6 @@ public class Customer {
 	private String email;
 
 	private List<Account> accounts;
-	private Account curAccount;
 
 	public Customer() {}
 	
@@ -43,9 +42,22 @@ public class Customer {
 		}
 	}
 	
-	public void selectCurAccount(int idxAccount) {
-		curAccount = accounts.get(idxAccount);
+	public int findAccountByAccountNumber(String accountNumber, Country country) {
+		for (int i = 0; i < accounts.size(); i++) {
+			if(accounts.get(i).getAccountNumber().equals(accountNumber)) {
+				if(accounts.get(i).getCountry().equals(country)) {
+					return i;
+				} else {
+					return -2;
+				}
+			}
+		}
+		return -1;
 	}
+	
+//	public void selectCurAccount(int idxAccount) {
+//		curAccount = accounts.get(idxAccount);
+//	}
 	
 	public void addAccount(Country country, int password) {
 		accounts.add(new Account(country, password));
@@ -115,11 +127,11 @@ public class Customer {
 		this.email = email;
 	}
 
-	public Account getCurAccount() {
-		return curAccount;
-	}
-
-	public void setCurAccount(Account curAccount) {
-		this.curAccount = curAccount;
-	}
+//	public Account getCurAccount() {
+//		return curAccount;
+//	}
+//
+//	public void setCurAccount(Account curAccount) {
+//		this.curAccount = curAccount;
+//	}
 }
