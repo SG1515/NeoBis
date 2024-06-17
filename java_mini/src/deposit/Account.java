@@ -1,8 +1,7 @@
 package deposit;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 public class Account {
 	private String accountNumber;
@@ -15,12 +14,31 @@ public class Account {
 
 	public Account(Country country, int password) {
 		// XXX-XX-XXXX-XXX
-		this.accountNumber = "111-1111-1111";
+		this.accountNumber = makeAccountNumber();
 //		 this.accountNumber = accountNumber; -> 랜덤 숫자
 		this.balance = 0;
 		this.trades = new ArrayList<>();
 		this.country = country;
 		this.password = password;
+	}
+	
+	private String makeAccountNumber() {
+		String accountNumber = "";
+		
+		int[] num = new int[12];
+		
+		for (int i = 0; i < num.length; i++) {
+			num[i] = (int)(Math.random() * 10);
+		}
+		
+		for (int i = 0; i < num.length; i++) {
+			accountNumber += num[i];
+			if(i == 2 || i == 4 || i == 8) {
+				accountNumber += "-";
+			}
+		}
+		
+		return accountNumber;
 	}
 
 	public void printTrades(){
