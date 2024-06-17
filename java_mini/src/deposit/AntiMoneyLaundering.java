@@ -22,8 +22,12 @@ public class AntiMoneyLaundering {
 	// KYC
 	public boolean knowYourCustomer(Customer customer, long amount) {
 		if (!customer.isCdd() || !checkExpiredCdd(customer)) {
-			if (!customerDueDiligence(customer)) {
-				return false;
+			try {
+				if (!customerDueDiligence(customer)) {
+					return false;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		if (watchListFiltering(customer)) { // 필터링에 걸렸으면 거래 불가
@@ -123,6 +127,11 @@ public class AntiMoneyLaundering {
 			System.out.println("직업이 일치하지 않습니다.");
 			return false;
 		}
+		if(num == 2) {
+			System.out.println("계좌의 실소유주가 아닙니다");
+			customer.setOwner(false);
+			return false;
+		}
 		customer.setCdd(true);
 		customer.setCddDate(LocalDateTime.now());
 		// 거래 모니터링
@@ -163,20 +172,15 @@ public class AntiMoneyLaundering {
 
 	// 고객 확인 만기 여부 체크
 	public boolean checkExpiredCdd(Customer customer) {
-		Date cddDate = customer.getCddDate();
-		if (cddDate != null) {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(cddDate);
-			calendar.add(Calendar.YEAR, 3);
+	    LocalDateTime cddDate = customer.getCddDate();
+	    if (cddDate != null) {
+	        LocalDateTime expiryDate = cddDate.plusYears(3);
+	        LocalDateTime currentDate = LocalDateTime.now();
 
-			Date expiryDate = calendar.getTime();
-			Date currentDate = new Date();
-
-			if (currentDate.after(expiryDate)) {
-				return false;
-			}
-
-		}
-		return true;
+	        if (currentDate.isAfter(expiryDate)) {
+	            return false;
+	        }
+	    }
+	    return true;
 	}
 }
