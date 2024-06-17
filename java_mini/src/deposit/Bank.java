@@ -228,12 +228,12 @@ public class Bank {
 		depositor.printAccounts();
 		System.out.println();
 
-		System.out.println("1.USA 2.CHI 3.JAP 4.KOR 5.UK");
+		System.out.println("1.KOR 2.USA 3.CHI 4.JAP 5.UK");
 		System.out.print("계좌를 선택해주세요. > ");
 
 		int func = Integer.parseInt(DataInput.readLine());
 
-		if (func == 4) {
+		if (func == 1) {
 			System.out.println("계좌 선택을 다시 해주세요.");
 			return;
 		}
@@ -246,6 +246,7 @@ public class Bank {
 		long changeMoney = Long.parseLong(DataInput.readLine());
 		long balance = 0;
 		long printBalance = 0;
+		
 		// 고객의 계좌에서 돈을 꺼낼 계좌를 가져오기.
 		for (int i = 0; i < depositor.getAccounts().size(); i++) {
 			if (choice.equals(depositor.getAccounts().get(i).getCountry().name())) {
@@ -259,41 +260,43 @@ public class Bank {
 				}
 			}
 		}
+		
 
-		long changed = (long) (changeMoney * ExchangeRate.getExchanges().get(choiceCountry));
-		System.out.println("환전된 금액은 > " + changed + exchangeRate.getCall().get(3));
+		double changed =  ( ((double)changeMoney) * ExchangeRate.getExchanges().get(choiceCountry));
+		// 자금세탁방지
+		if (!aml.knowYourCustomer(depositor, (long)changed)) {
+			System.out.println();
+			return;
+		}
+		System.out.println("환전된 금액은 > " + Math.round(changed) + exchangeRate.getCall().get(3));
 		System.out.println("해당계좌 잔액은 > " + printBalance);
 
 	}
 
 	public void KRWToForeignExchange(Customer depositor, ExchangeRate exchangeRate) throws IOException {
 
-		System.out.println("1.USD 2.CNY 3.JPY 4.EUR");
+		System.out.println("1.USA 2.CHI 3.JAP 4.UK");
 		System.out.print("환전하고 싶은 통화를 선택해주세요. >");
-		int tmp = Integer.parseInt(DataInput.readLine());
-
-		int choiceAccount = 0;
-		// 한국 계좌가 있어서 중간 치환해줌.
-		switch (tmp) {
-		case 1:
-			break;
-		case 2:
-			choiceAccount = 1;
-			break;
-		case 3:
-			choiceAccount = 2;
-			break;
-		case 4:
-			choiceAccount = 4;
-			break;
-		}
+		int choiceAccount = Integer.parseInt(DataInput.readLine());
 
 		Country[] arr = Country.values();
 		Country choiceCountry = arr[choiceAccount];
 		String choiceCountryStr = choiceCountry.name();
-
-		System.out.print("환전할 금액을 입력해주세요. > ");
-		long changeMoney = Long.parseLong(DataInput.readLine());
+		
+		long changeMoney = 0;
+		while(true) {
+			System.out.print("환전할 금액을 입력해주세요. > ");
+			changeMoney = Long.parseLong(DataInput.readLine());
+			double tmpExchange = exchangeRate.getExchanges().get(choiceCountry);
+			if (changeMoney >= tmpExchange) break;
+		}
+		
+		// 자금세탁방지
+		if (!aml.knowYourCustomer(depositor, changeMoney)) {
+			System.out.println();
+			return;
+		}
+		
 		long balance = 0;
 		long printBalance = 0;
 
@@ -312,6 +315,7 @@ public class Bank {
 			}
 		}
 
+		//해당통화 이름가져오기
 		int idx = 0;
 		String moneyName = "";
 		TreeMap<Country, Double> sortedMap = new TreeMap<>(ExchangeRate.getExchanges());
@@ -321,9 +325,76 @@ public class Bank {
 			}
 			idx++;
 		}
-		long changed = (long) (changeMoney / ExchangeRate.getExchanges().get(choiceCountry));
-		System.out.println("환전된 금액은 > " + changed + moneyName);
+		double changed =  ( ((double)changeMoney) / ExchangeRate.getExchanges().get(choiceCountry));
+		System.out.println("환전된 금액은 > " + Math.round(changed) + moneyName);
 		System.out.println("해당계좌 잔액은 > " + printBalance);
+	}
+
+
+	public void foreignRemittance(Customer depositor,Customer recipient, ExchangeRate exchangeRate) throws Exception {
+		
+		System.out.println("1.USA 2.CHI 3.JAP 4.UK");
+		System.out.print("송금할 통화의 계좌를 선택해주세요. >");
+		int choiceAccount = Integer.parseInt(DataInput.readLine());
+
+		Country[] arr = Country.values();
+		Country choiceCountry = arr[choiceAccount];
+		String choiceCountryStr = choiceCountry.name();
+		
+		int idxRecipientAccount = -1;
+		while (true) {
+			// 받는 분 계좌번호 입력
+			System.out.print("받는 분 계좌번호 입력 > ");
+			String recipientAccountNumber = DataInput.readLine();
+
+			// 일치하는 계좌 찾기
+			for (int i = 0; i < customers.size(); i++) {
+				idxRecipientAccount = customers.get(i).findAccountByAccountNumber(recipientAccountNumber,
+						choiceCountry);
+
+				if (idxRecipientAccount != -1) {
+					recipient = customers.get(i);
+					break;
+				}
+			}
+
+			if (idxRecipientAccount == -1) {
+				System.out.println("============== 해당 계좌는 존재하지 않습니다. 다시 입력해주세요. ==============");
+			} else {
+				break;
+			}
+		}
+
+		long changeMoney = 0;
+		while(true) {
+			System.out.print("송금할 금액을 입력해주세요. > ");
+			changeMoney = Long.parseLong(DataInput.readLine());
+			double tmpExchange = exchangeRate.getExchanges().get(choiceCountry);
+			if (changeMoney >= tmpExchange) break;
+		}
+		
+		// 자금세탁방지
+		if (!aml.knowYourCustomer(depositor, changeMoney)) {
+			System.out.println();
+			return;
+		}
+		
+		// 비밀번호 입력
+		curCustomer.getAccounts().get(choiceAccount).checkPassword();
+
+		// withdraw
+		if (curCustomer.getAccounts().get(choiceAccount).withdraw(changeMoney)) {
+			// 입금
+			recipient.getAccounts().get(idxRecipientAccount).deposit(changeMoney);
+
+			// 완료
+			System.out.println("========== 송금이 완료되었습니다 ==========");
+
+		} else {
+			// 실패
+			System.out.println("=========== 잔액이 부족합니다 ===========");
+		}
+		
 	}
 
 }

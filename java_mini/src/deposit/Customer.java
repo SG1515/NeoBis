@@ -41,10 +41,11 @@ public class Customer {
 
 	public void printAccounts(){
 		for (int i = 0; i < accounts.size(); i++) {
-			System.out.println("==============" + (i+1) + "==============");
+			System.out.println("=============" + (i+1) + "=============");
 			accounts.get(i).printAccount();
-			System.out.println("===============================");
 		}
+		System.out.println("===========================");
+
 	}
 	
 	public int findAccountByAccountNumber(String accountNumber, Country country) {

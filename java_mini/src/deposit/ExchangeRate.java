@@ -22,14 +22,10 @@ public class ExchangeRate {
 		return exchanges;
 	}
 
-	
-	// 정적 초기화 블럭
-		static {
-		}
 
 	
 	public static void setExchanges() throws IOException {
-		System.out.println("1.USA 2.CHI 3.JAP 4.KOR 5.UK");
+		System.out.println("1.KOR 2.USA 3.CHI 4.JAP 5.UK");
 		System.out.print("갱신할 통화를 선택 > ");
 		int select = Integer.parseInt(DataInput.readLine());
 		
@@ -44,15 +40,15 @@ public class ExchangeRate {
 
 	//정적 초기화 블럭
 	static{
+		exchanges.put(Country.KOR, 1.0);
 		exchanges.put(Country.USA, 1200.0);
 		exchanges.put(Country.CHI, 180.0);
 		exchanges.put(Country.JAP, 8.26);
-		exchanges.put(Country.KOR, 1.0);
 		exchanges.put(Country.UK, 1400.0);
+		call.add("KRW");
 		call.add("USD");
 		call.add("CNY");
 		call.add("JPY");
-		call.add("KRW");
 		call.add("EUR");
 		
 	}
