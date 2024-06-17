@@ -71,7 +71,7 @@ public class Bank {
 	
 	/**
 	 * 입금
-	 * : 자금세탁방지 -> 계좌 리스트 출력 -> 계좌 선택 -> 거래 금액 입력 -> 입금 -> 완료
+	 * : 자금세탁방지 -> 계좌 리스트 출력 -> 계좌 선택 -> 거래 금액 입력 -> 비밀번호 입력 -> 입금 -> 완료
 	 * @throws Exception
 	 */
 	public void deposit() throws Exception {
@@ -90,6 +90,9 @@ public class Bank {
 		System.out.print("입금하실 금액을 입력해주세요 > ");
 		long amount = Long.parseLong(DataInput.readLine());
 		
+		// 비밀번호 입력
+		curCustomer.getAccounts().get(idxAccount).checkPassword();
+		
 		// deposit
 		curCustomer.getAccounts().get(idxAccount).deposit(amount);
 		
@@ -99,9 +102,36 @@ public class Bank {
 	
 	/**
 	 * 출금
-	 * : 자금세탁방지 -> 계좌 ->
+	 * : 자금세탁방지 -> 계좌 리스트 출력 -> 계좌 선택 -> 거래 금액 입력 -> 비밀번호 입력 -> 출금 -> 완료
+	 * @throws IOException 
+	 * @throws NumberFormatException 
 	 */
-	public void withdraw() {
+	public void withdraw() throws Exception {
+		// 자금세탁방지
+		
+		// 계좌 탐색
+		curCustomer.printAccounts();
+
+		// 계좌 선택
+		System.out.print("계좌를 선택해주세요 > ");
+		int idxAccount = Integer.parseInt(DataInput.readLine()) - 1;
+		curCustomer.selectCurAccount(idxAccount);
+
+		// 거래금액 입력받기
+		System.out.print("출금하실 금액을 입력해주세요 > ");
+		long amount = Long.parseLong(DataInput.readLine());
+		
+		// 비밀번호 입력
+		curCustomer.getAccounts().get(idxAccount).checkPassword();
+
+		// withdraw
+		if(curCustomer.getAccounts().get(idxAccount).withdraw(amount)) {
+			// 완료
+			System.out.println("========== 출금이 완료되었습니다 ==========");
+		} else {
+			// 실패
+			System.out.println("=========== 잔액이 부족합니다 ===========");
+		}
 		
 	}
 }
