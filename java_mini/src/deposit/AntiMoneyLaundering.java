@@ -1,12 +1,11 @@
 package deposit;
 
+import java.io.BufferedReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import jdk.internal.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 public class AntiMoneyLaundering {
 	private long limit;
@@ -18,14 +17,14 @@ public class AntiMoneyLaundering {
 	}
 
 	public boolean customerInformationCheck(Customer customer, long amount) {
-		if (watchListFiltering(customer)) { // 필터링에 걸렸으면 다음 검사 진행
-			if (suspiciousTransactionReport(customer, amount)) {
-				if (currencyTransactionReport(customer)) {
-
-				}
-			}
+		if (watchListFiltering(customer)) { // 필터링에 걸렸으면 거래 불가
+			return false;
 		}
-		return false;
+		if (suspiciousTransactionReport(customer, amount)) {
+			return false;
+		}
+		currencyTransactionReport(amount);
+		return true;
 	}
 
 	public boolean watchListFiltering(Customer customer) {
@@ -43,30 +42,30 @@ public class AntiMoneyLaundering {
 		//직업이 없거나, 개좌의 갯수가 2개 이상이거나, 천 만원 이상 거래하는 경우
 		if(customer.getJop() == null && customer.getAccounts().size() > 2 && amount >= limit)) {
 			System.out.println("의심 거래 발견!! 금융정보분석원으로 보고가 완료되었습니다.");
-			return false;
+			return true;
 		}
 		//고객이 미성년자이면서 천 만원 이상 거래하는 경우
 		else if(isTeenage(customer.getRegistrationNumber()) && amount >= limit) {
 			System.out.println("의심 거래 발견!! 금융정보분석원으로 보고가 완료되었습니다.");
-			return false;
+			return true;
 		}
 		// 위험 고객이 아니거나, 계좌의 실 소유자가 아닌 경우
 		else if(customer.getOwner()==false) {
 			System.out.println("의심 거래 발견!! 금융정보분석원으로 보고가 완료되었습니다.");
-			return false;
+			return true;
 		}
 		// 하루 동안 분할거래가 3회 이상인 경우
 		else if(getTradesForToday(customer).size() >= 3) {
 			System.out.println("의심 거래 발견!! 금융정보분석원으로 보고가 완료되었습니다.");
-			return false;
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 
-	public boolean currencyTransactionReport(Customer customer) {
-
-		return true;
+	public void currencyTransactionReport(long amonut) {
+		if (amonut >= limit)
+			System.out.println("원화 1천만원 이상 거래 발견!! 금융정보분석원으로 보고가 완료되었습니다.");
 	}
 
 	public boolean customerDueDiligence(Customer customer) {
@@ -95,11 +94,7 @@ public class AntiMoneyLaundering {
 		}
 
 		// 거래 모니터링
-		if (!suspiciousTransactionReport(customer)) {
-			System.out.println("의심 거래가 발견되지 않았습니다.");
-			return true;
-		}
-
+		System.out.println("의심 거래가 발견되지 않았습니다.");
 		return true;
 	}
 
