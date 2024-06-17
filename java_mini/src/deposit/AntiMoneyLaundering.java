@@ -41,7 +41,7 @@ public class AntiMoneyLaundering {
 	public boolean watchListFiltering(Customer customer) {
 		for (Customer c : criticalCustomer) {
 			if (c.getName().equals(customer.getName())
-					&& (c.getRegistrationNumber() == customer.getRegistrationNumber())) {
+					&& (c.getRegistrationNumber().equals(customer.getRegistrationNumber()))) {
 				return true;
 			}
 		}
