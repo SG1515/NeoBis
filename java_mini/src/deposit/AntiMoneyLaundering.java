@@ -32,6 +32,7 @@ public class AntiMoneyLaundering {
 			return false;
 		} else {
 			currencyTransactionReport(amount); // 일정 금액 이상 현금 거래 보고
+			return false;
 		}
 		return true;
 	}
