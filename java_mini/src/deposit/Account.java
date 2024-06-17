@@ -8,14 +8,18 @@ public class Account {
 	private long balance;
 	private List<Trade> trades;
 	private Country country;
+	private int password;
 
 	public Account() {}
 
-	public Account(Country country) {
-		// this.accountNumber = accountNumber; -> 랜덤 숫자
+	public Account(Country country, int password) {
+		// XXX-XX-XXXX-XXX
+		this.accountNumber = "111-1111-1111";
+//		 this.accountNumber = accountNumber; -> 랜덤 숫자
 		this.balance = 0;
 		this.trades = new ArrayList<>();
 		this.country = country;
+		this.password = password;
 	}
 
 	public void printTrades(){
@@ -33,7 +37,7 @@ public class Account {
 
 	public void deposit(long amount){
 		balance += amount;
-		trades.add(new Trade())
+		trades.add(new Trade());
 	}
 
 	public String getAccountNumber() {
