@@ -26,9 +26,9 @@ public class domain {
 		c.getAccounts().get(0).setBalance(100000);
 		
 		//외화를 원화 환전
-		bank.foreignToKWRExchange(c, e);
+//		bank.foreignToKWRExchange(c, e);
 		
 		//원화를 외화로 환전
-//		bank.KRWToForeignExchange(c, e);
+		bank.KRWToForeignExchange(c, e);
 	}
 }
