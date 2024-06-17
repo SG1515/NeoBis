@@ -99,7 +99,7 @@ public class Bank {
 	
 	/**
 	 * 출금
-	 * : 자금세탁방지 -> 계좌
+	 * : 자금세탁방지 -> 계좌 ->
 	 */
 	public void withdraw() {
 		
