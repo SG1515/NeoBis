@@ -30,11 +30,11 @@ public class ExchangeRate {
 		int select = Integer.parseInt(DataInput.readLine());
 		
 		System.out.print("갱신된 환율값을 입력 > ");
-		int update = Integer.parseInt(DataInput.readLine());
+		double update = Double.parseDouble(DataInput.readLine());
 		
 		
 		Country[] arr = Country.values();
-		exchanges.put(arr[select-1], (double) update);
+		exchanges.put(arr[select-1], update);
 	
 	}
 
