@@ -53,12 +53,12 @@ public class AntiMoneyLaundering {
 				return true;
 			}
 		}
+		System.out.println("WLF : 고위험 고객이 아닙니다");
 		return false;
 	}
 
 	// STR
 	public boolean suspiciousTransactionReport(Customer customer, long amount) {
-
 		// 직업이 없거나, 개좌의 갯수가 2개 이상이거나, 천 만원 이상 거래하는 경우
 		if (customer.getJob() == null && customer.getAccounts().size() > 2) {
 			System.out.println("의심 거래 발견!! 금융정보분석원으로 보고가 완료되었습니다.");
@@ -79,7 +79,7 @@ public class AntiMoneyLaundering {
 			System.out.println("의심 거래 패턴 발견!! 금융정보분석원으로 보고가 완료되었습니다.");
 			return true;
 		}
-
+		System.out.println("STR : 의심 거래가 발견되지 않았습니다.");
 		return false;
 	}
 
@@ -89,11 +89,13 @@ public class AntiMoneyLaundering {
 			System.out.println("원화 1천만원 이상 거래 발견!! 금융정보분석원으로 보고가 완료되었습니다.");
 			return true;
 		}
+		System.out.println("CTR : 고액 현금 거래가 발견되지 않았습니다.");
 		return false;
 	}
 
 	// CDD
 	public boolean customerDueDiligence(Customer customer) throws IOException {
+		System.out.println("CDD : 고객확인제도를 위해 개인정보를 확인합니다. ");
 		BufferedReader br = DataInput.getInstance();
 
 		System.out.print("이름을 입력하세요 : ");
@@ -127,7 +129,7 @@ public class AntiMoneyLaundering {
 			return false;
 		}
 		System.out.println("거래하려는 계좌의 실소유자가 맞습니까?");
-		System.out.print("1. 예\t2.아니요");
+		System.out.println("1. 예\t2.아니요");
 		int num = Integer.parseInt(br.readLine());
 		if(num == 2) {
 			System.out.println("계좌의 실소유주가 아닙니다");
