@@ -45,6 +45,7 @@ public class Main {
 				exchangeRateManagement();
 				break;
 			case 4:
+				customerManagement();
 				break;
 			case 5:
 				return;
@@ -73,12 +74,19 @@ public class Main {
 				bank.deposit();
 				break;
 			case 2:
+				bank.findCustomer();
+				bank.withdraw();
 				break;
 			case 3:
+				bank.findCustomer();
+				bank.remittance();
 				break;
 			case 4:
+				exchangeRate();
 				break;
 			case 5:
+				bank.findCustomer();
+				bank.foreignRemittance();
 				break;
 			case 6:
 				return;
@@ -101,11 +109,15 @@ public class Main {
 			
 			switch(menu) {
 			case 1:
-				privateTransaction();
+				bank.findCustomer();
+				bank.addAccount();
 				break;
 			case 2:
+//				bank.findCustomer();
 				break;
 			case 3:
+				bank.findCustomer();
+				bank.getCurCustomer().printAccounts();
 				break;
 			case 4:
 				return;
@@ -127,9 +139,10 @@ public class Main {
 			
 			switch(menu) {
 			case 1:
-				privateTransaction();
+				bank.getExchangeRate().setExchanges();
 				break;
 			case 2:
+				bank.getExchangeRate().printExchanges();
 				break;
 			case 3:
 				return;
@@ -152,13 +165,44 @@ public class Main {
 			
 			switch(menu) {
 			case 1:
-				privateTransaction();
+				bank.addCustomer();
 				break;
 			case 2:
+				bank.findCustomer();
+				bank.getCurCustomer().printCustomer();
 				break;
 			case 3:
+				bank.findCustomer();
+				bank.printAllTrades();
 				break;
 			case 4:
+				return;
+			}
+		}
+	}
+	
+	public static void exchangeRate() throws Exception {
+		
+		while(true) {
+			System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 🔑   환전 메뉴  🔑 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
+			System.out.println("▒▒▒\t\t ① 원화 환전      \t\t▒▒▒");
+			System.out.println("▒▒▒\t\t ② 외화 환전      \t\t▒▒▒");
+			System.out.println("▒▒▒\t\t ③ 뒤로가기       \t\t▒▒▒");
+			System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
+			
+			System.out.print("MENU 입력 ⇒ ");
+			int menu = Integer.parseInt(DataInput.readLine());
+			
+			switch(menu) {
+			case 1:
+				bank.findCustomer();
+				bank.kRWToForeignExchange();
+				break;
+			case 2:
+				bank.findCustomer();
+				bank.foreignToKWRExchange();
+				break;
+			case 3:
 				return;
 			}
 		}
