@@ -98,44 +98,43 @@ public class AntiMoneyLaundering {
 
 		System.out.print("이름을 입력하세요 : ");
 		String name = br.readLine();
-		System.out.print("휴대폰 번호를 입력하세요 : ");
-		String phone = br.readLine();
-		System.out.print("주민등록번호를 입력하세요 : ");
-		String registrationNumber = br.readLine();
-		System.out.print("주소를 입력하세요.(ex.서울시 종로구 혜화동) : ");
-		String address = br.readLine();
-		System.out.print("직업을 입력하세요 : ");
-		String jop = br.readLine();
-		System.out.println("거래하려는 계좌의 실소유자가 맞습니까?");
-		System.out.print("1. 예\t2.아니요");
-		int num = Integer.parseInt(br.readLine());
-
-		// 신원 확인
 		if (!(customer.getName().equals(name))) {
 			System.out.println("이름이 일치하지 않습니다.");
 			return false;
 		}
+		System.out.print("휴대폰 번호를 입력하세요 : ");
+		String phone = br.readLine();
 		if (!(customer.getPhone().equals(phone))) {
 			System.out.println("휴대폰 번호가 일치하지 않습니다.");
 			return false;
 		}
+		System.out.print("주민등록번호를 입력하세요 : ");
+		String registrationNumber = br.readLine();
 		if (!(customer.getRegistrationNumber().equals(registrationNumber))) {
 			System.out.println("주민등록번호가 일치하지 않습니다.");
 			return false;
 		}
+		System.out.print("주소를 입력하세요.(ex.서울시 종로구 혜화동) : ");
+		String address = br.readLine();
 		if (!(customer.getAddress().equals(address))) {
 			System.out.println("주소가 일치하지 않습니다.");
 			return false;
 		}
+		System.out.print("직업을 입력하세요 : ");
+		String jop = br.readLine();
 		if (!(customer.getJob().equals(jop))) {
 			System.out.println("직업이 일치하지 않습니다.");
 			return false;
 		}
+		System.out.println("거래하려는 계좌의 실소유자가 맞습니까?");
+		System.out.print("1. 예\t2.아니요");
+		int num = Integer.parseInt(br.readLine());
 		if(num == 2) {
 			System.out.println("계좌의 실소유주가 아닙니다");
 			customer.setOwner(false);
 			return false;
 		}
+
 		customer.setCdd(true);
 		customer.setCddDate(LocalDateTime.now());
 		// 거래 모니터링
