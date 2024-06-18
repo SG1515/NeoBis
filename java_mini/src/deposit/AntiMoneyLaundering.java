@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +34,13 @@ public class AntiMoneyLaundering {
 		if (suspiciousTransactionReport(customer, amount)) { // 의심 거래 식별 보고
 			return false;
 		} else if(currencyTransactionReport(amount)) {// 일정 금액 이상 현금 거래 보고
-			return false;
+			try {
+				if(!customerDueDiligence(customer)) {
+					return false;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return true;
 	}
