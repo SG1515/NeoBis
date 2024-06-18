@@ -205,7 +205,7 @@ public class Bank {
 			// 일치하는 계좌 찾기
 			for (int i = 0; i < customers.size(); i++) {
 				idxRecipientAccount = customers.get(i).findAccountByAccountNumber(recipientAccountNumber,
-						curCustomer.getAccounts().get(idxAccount).getCountry());
+						Country.KOR);
 
 				if (idxRecipientAccount != -1) {
 					recipient = customers.get(i);
@@ -275,9 +275,9 @@ public class Bank {
 		}
 	}
 
-	public void foreignToKWRExchange(Customer depositor, ExchangeRate exchangeRate) throws IOException {
+	public void foreignToKWRExchange() throws IOException {
 		System.out.println("고객님의 계좌목록입니다.");
-		depositor.printAccounts();
+		curCustomer.printAccounts();
 		System.out.println();
 
 		System.out.println("1.KOR 2.USA 3.CHI 4.JAP 5.UK");
@@ -305,24 +305,28 @@ public class Bank {
 		}
 		long balance = 0;
 		long printBalance = 0;
-
+		boolean findAccount = false;
 		// 고객의 계좌에서 돈을 꺼낼 계좌를 가져오기.
-		for (int i = 0; i < depositor.getAccounts().size(); i++) {
-			if (choice.equals(depositor.getAccounts().get(i).getCountry().name())) {
-				balance = depositor.getAccounts().get(i).getBalance() - changeMoney;
+		for (int i = 0; i < curCustomer.getAccounts().size(); i++) {
+			if (choice.equals(curCustomer.getAccounts().get(i).getCountry().name())) {
+				balance = curCustomer.getAccounts().get(i).getBalance() - changeMoney;
+				findAccount = true;
 				if (balance >= 0) {
-					depositor.getAccounts().get(i).setBalance(balance);
-					printBalance = depositor.getAccounts().get(i).getBalance();
+					curCustomer.getAccounts().get(i).setBalance(balance);
+					printBalance = curCustomer.getAccounts().get(i).getBalance();
 				} else {
 					System.out.println("잔액이 부족합니다.");
 					return;
 				}
 			}
 		}
-
+		if(!findAccount) {
+			System.out.println("계좌를 찾을 수 없습니다.");
+			return;
+		}
 		double changed = (((double) changeMoney) * ExchangeRate.getExchanges().get(choiceCountry));
 		// 자금세탁방지
-		if (!aml.knowYourCustomer(depositor, (long) changed)) {
+		if (!aml.knowYourCustomer(curCustomer, (long) changed)) {
 			System.out.println();
 			return;
 		}
@@ -331,7 +335,7 @@ public class Bank {
 
 	}
 
-	public void KRWToForeignExchange(Customer depositor, ExchangeRate exchangeRate) throws IOException {
+	public void kRWToForeignExchange() throws IOException {
 
 		System.out.println("1.USA 2.CHI 3.JAP 4.UK");
 		System.out.print("환전하고 싶은 통화를 선택해주세요. >");
@@ -351,27 +355,34 @@ public class Bank {
 		}
 
 		// 자금세탁방지
-		if (!aml.knowYourCustomer(depositor, changeMoney)) {
+		if (!aml.knowYourCustomer(curCustomer, changeMoney)) {
 			System.out.println();
 			return;
 		}
 
 		long balance = 0;
 		long printBalance = 0;
-
+		Country tmp = Country.KOR;
+		String tmpKOR = tmp.name();
+		boolean findAccount = false;
 		// 고객의 계좌에서 돈을 꺼낼 계좌를 가져오기.
-		for (int i = 0; i < depositor.getAccounts().size(); i++) {
-			if (choiceCountryStr.equals(depositor.getAccounts().get(i).getCountry().name())) {
-				balance = depositor.getAccounts().get(choiceAccount).getBalance() - changeMoney;
+		for (int i = 0; i < curCustomer.getAccounts().size(); i++) {
+			if (tmpKOR.equals(curCustomer.getAccounts().get(i).getCountry().name())) {
+				findAccount = true;
+				balance = curCustomer.getAccounts().get(i).getBalance() - changeMoney;
 				if (balance >= 0) {
-					depositor.getAccounts().get(choiceAccount).setBalance(balance);
-					printBalance = depositor.getAccounts().get(choiceAccount).getBalance();
+					curCustomer.getAccounts().get(choiceAccount).setBalance(balance);
+					printBalance = curCustomer.getAccounts().get(choiceAccount).getBalance();
 					break;
 				} else {
 					System.out.println("잔액이 부족합니다.");
 					return;
 				}
 			}
+		}
+		if(!findAccount) {
+			System.out.println("고객 계좌를 찾을 수 없습니다.");
+			return;
 		}
 
 		// 해당통화 이름가져오기
@@ -389,7 +400,7 @@ public class Bank {
 		System.out.println("해당계좌 잔액은 > " + printBalance);
 	}
 
-	public void foreignRemittance(ExchangeRate exchngeRate) throws Exception {
+	public void foreignRemittance() throws Exception {
 
 		System.out.println("1.USA 2.CHI 3.JAP 4.UK");
 		System.out.print("송금할 통화의 계좌를 선택해주세요. >");
@@ -408,7 +419,7 @@ public class Bank {
 				break;
 			}
 		}
-
+		
 		Customer recipient = null;
 		int idxRecipientAccount = -1;
 		while (true) {
@@ -465,6 +476,42 @@ public class Bank {
 			System.out.println("=========== 잔액이 부족합니다 ===========");
 		}
 
+	}
+
+	public List<Customer> getCustomers() {
+		return customers;
+	}
+
+	public void setCustomers(List<Customer> customers) {
+		this.customers = customers;
+	}
+
+	public ExchangeRate getExchangeRate() {
+		return exchangeRate;
+	}
+
+	public void setExchangeRate(ExchangeRate exchangeRate) {
+		this.exchangeRate = exchangeRate;
+	}
+
+	public AntiMoneyLaundering getAml() {
+		return aml;
+	}
+
+	public void setAml(AntiMoneyLaundering aml) {
+		this.aml = aml;
+	}
+
+	public Customer getCurCustomer() {
+		return curCustomer;
+	}
+
+	public void setCurCustomer(Customer curCustomer) {
+		this.curCustomer = curCustomer;
+	}
+
+	public static int getPassword() {
+		return PASSWORD;
 	}
 
 }
