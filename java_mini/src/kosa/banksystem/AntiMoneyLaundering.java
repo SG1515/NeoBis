@@ -1,4 +1,4 @@
-package deposit;
+package kosa.banksystem;
 
 import java.io.BufferedReader;
 import java.io.IOException;

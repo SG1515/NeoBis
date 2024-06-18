@@ -1,4 +1,4 @@
-package deposit;
+package kosa.banksystem;
 
 public class domain {
 //	public static void main(String[] args) throws Exception {

@@ -1,9 +1,9 @@
-package deposit;
+package kosa.banksystem;
 
 import java.io.*;
 import java.util.*;
 
-import deposit.DataInput;
+import kosa.banksystem.DataInput;
 
 public class Bank {
 	private List<Customer> customers;

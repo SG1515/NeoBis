@@ -1,4 +1,4 @@
-package deposit;
+package kosa.banksystem;
 
 import java.time.LocalDateTime;
 import java.util.*;
