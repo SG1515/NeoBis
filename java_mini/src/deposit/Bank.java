@@ -18,6 +18,27 @@ public class Bank {
 		customers.add(new Customer("yerim", "010-1111-1111", "서울 강북구", "990101-01010101", "무직", "yerim@naver.com"));
 		customers.add(new Customer("song", "010-1111-1111", "서울 강북구", "990101-01010102", "무직", "yerim@naver.com"));
 	}
+	
+	public void addCustomer() throws IOException {
+		System.out.println("========== 고객 등록 ===========");
+		
+		System.out.print("이름 입력 > ");
+		String name = DataInput.readLine();
+		System.out.print("전화번호 입력 > ");
+		String phone = DataInput.readLine();
+		System.out.print("주소 입력 (ex.서울시 종로구 혜화동) > ");
+		String address = DataInput.readLine();
+		System.out.print("주민등록번호 입력 > ");
+		String registrationNumber = DataInput.readLine();
+		System.out.print("직업 입력 > ");
+		String job = DataInput.readLine();
+		System.out.print("이메일 입력 > ");
+		String email = DataInput.readLine();
+		
+		customers.add(new Customer(name, phone, address, registrationNumber, job, email));
+		
+		System.out.println("========== 고객이 추가되었습니다. ==========");
+	}
 
 	/**
 	 * 고객 찾기 : 고객 주민번호로 현재 고객 등록

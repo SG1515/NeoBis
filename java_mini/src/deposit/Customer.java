@@ -38,7 +38,8 @@ public class Customer {
 		System.out.println("주소 : " + address);
 		System.out.println("실소유자 여부 : " + (owner ? "O" : "X"));
 		System.out.println("주민등록번호 : " + registrationNumber);
-		System.out.println("직업 : " +job);
+		System.out.println("직업 : " + job);
+		System.out.println("이메일 : " + email);
 	}
 
 	public void printAccounts(){
