@@ -272,9 +272,16 @@ public class Bank {
 		Country[] arr = Country.values();
 		Country choiceCountry = arr[func - 1];
 		String choice = choiceCountry.name();
-
-		System.out.print("환전할 금액을 입력해주세요. > ");
-		long changeMoney = Long.parseLong(DataInput.readLine());
+		long changeMoney = 0;
+		while(true) {
+			System.out.print("환전할 금액을 입력해주세요. > ");
+			changeMoney = Long.parseLong(DataInput.readLine());
+			if(changeMoney <= 0) {
+				System.out.println("정상적인 값을 입력해주세요.");
+			} else {
+				break;
+			}
+		}
 		long balance = 0;
 		long printBalance = 0;
 
