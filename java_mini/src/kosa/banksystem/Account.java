@@ -49,7 +49,6 @@ public class Account {
 	public void printAccount(){
 		System.out.println("계좌번호 : " + accountNumber);
 		System.out.println("잔액 : " + balance);
-		// printTrades();
 		System.out.println("국가 : " + country);
 	}
 	
