@@ -87,7 +87,7 @@ public class Bank {
 		}
 
 		while (true) {
-			System.out.print("비밀번호 4자리 입력 > ");
+			System.out.print("비밀번호 4자리 재입력 > ");
 			String pw2 = DataInput.readLine();
 
 			if (pw2.matches(pw1))
@@ -253,7 +253,7 @@ public class Bank {
 	public void printAllTrades() {
 		System.out.println("=========== 거래 내역 출력 ==========");
 		for (Account account : curCustomer.getAccounts()) {
-			account.printAccount();
+			account.printTrades();
 		}
 	}
 	
@@ -280,7 +280,7 @@ public class Bank {
 		curCustomer.printAccounts();
 		System.out.println();
 
-		System.out.println("1.KOR 2.USA 3.CHI 4.JAP 5.UK");
+		System.out.println("1.KOR 2.USA 3.CHI 4.JAP 5.UK");  // 수정 필요 -> enum 타입 출력
 		System.out.print("계좌를 선택해주세요. > ");
 
 		int func = Integer.parseInt(DataInput.readLine());
@@ -309,7 +309,7 @@ public class Bank {
 		// 고객의 계좌에서 돈을 꺼낼 계좌를 가져오기.
 		for (int i = 0; i < curCustomer.getAccounts().size(); i++) {
 			if (choice.equals(curCustomer.getAccounts().get(i).getCountry().name())) {
-				balance = curCustomer.getAccounts().get(i).getBalance() - changeMoney;
+				balance = curCustomer.getAccounts().get(i).getBalance() - changeMoney; // 수정 필요 -> withdraw 메서드 호출
 				findAccount = true;
 				if (balance >= 0) {
 					curCustomer.getAccounts().get(i).setBalance(balance);

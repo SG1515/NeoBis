@@ -23,7 +23,7 @@ public class Main {
 		}
 		
 		while(true) {
-			System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 🔑  관리자 로그인 🔑 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
+			System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 🔑  MENU 🔑 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
 			System.out.println("▒▒▒\t\t ① 개인 거래      \t\t▒▒▒");
 			System.out.println("▒▒▒\t\t ② 계좌 관리      \t\t▒▒▒");
 			System.out.println("▒▒▒\t\t ③ 환율 관리      \t\t▒▒▒");
@@ -56,7 +56,7 @@ public class Main {
 	public static void privateTransaction() throws Exception {
 		
 		while(true) {
-			System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 🔑  관리자 로그인 🔑 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
+			System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 🔑  개인 거래 🔑 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
 			System.out.println("▒▒▒\t\t ① 입금      \t\t▒▒▒");
 			System.out.println("▒▒▒\t\t ② 출금      \t\t▒▒▒");
 			System.out.println("▒▒▒\t\t ③ 송금      \t\t▒▒▒");
@@ -68,24 +68,22 @@ public class Main {
 			System.out.print("MENU 입력 ⇒ ");
 			int menu = Integer.parseInt(DataInput.readLine());
 			
+
+			bank.findCustomer();
 			switch(menu) {
 			case 1:
-				bank.findCustomer();
 				bank.deposit();
 				break;
 			case 2:
-				bank.findCustomer();
 				bank.withdraw();
 				break;
 			case 3:
-				bank.findCustomer();
 				bank.remittance();
 				break;
 			case 4:
 				exchangeRate();
 				break;
 			case 5:
-				bank.findCustomer();
 				bank.foreignRemittance();
 				break;
 			case 6:
@@ -106,17 +104,15 @@ public class Main {
 			
 			System.out.print("MENU 입력 ⇒ ");
 			int menu = Integer.parseInt(DataInput.readLine());
-			
+
+			bank.findCustomer();
 			switch(menu) {
 			case 1:
-				bank.findCustomer();
 				bank.addAccount();
 				break;
 			case 2:
-//				bank.findCustomer();
 				break;
 			case 3:
-				bank.findCustomer();
 				bank.getCurCustomer().printAccounts();
 				break;
 			case 4:
@@ -195,11 +191,9 @@ public class Main {
 			
 			switch(menu) {
 			case 1:
-				bank.findCustomer();
 				bank.kRWToForeignExchange();
 				break;
 			case 2:
-				bank.findCustomer();
 				bank.foreignToKWRExchange();
 				break;
 			case 3:
