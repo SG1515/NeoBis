@@ -33,9 +33,9 @@ public class AntiMoneyLaundering {
 		}
 		if (suspiciousTransactionReport(customer, amount)) { // 의심 거래 식별 보고
 			return false;
-		} else if(currencyTransactionReport(amount)) {// 일정 금액 이상 현금 거래 보고
+		} else if (currencyTransactionReport(amount)) {// 일정 금액 이상 현금 거래 보고
 			try {
-				if(!customerDueDiligence(customer)) {
+				if (!customerDueDiligence(customer)) {
 					return false;
 				}
 			} catch (IOException e) {
@@ -75,7 +75,7 @@ public class AntiMoneyLaundering {
 			return true;
 		}
 		// 하루 동안 분할거래가 3회 이상인 경우
-		else if (getTradesForToday(customer).size() >= 3) {
+		else if (getTradesForToday(customer) >= 3) {
 			System.out.println("의심 거래 패턴 발견!! 금융정보분석원으로 보고가 완료되었습니다.");
 			return true;
 		}
@@ -123,15 +123,15 @@ public class AntiMoneyLaundering {
 			return false;
 		}
 		System.out.print("직업을 입력하세요 : ");
-		String jop = br.readLine();
-		if (!(customer.getJob().equals(jop))) {
+		String job = br.readLine();
+		if (!(customer.getJob().equals(job))) {
 			System.out.println("직업이 일치하지 않습니다.");
 			return false;
 		}
 		System.out.println("거래하려는 계좌의 실소유자가 맞습니까?");
 		System.out.println("1. 예\t2.아니요");
 		int num = Integer.parseInt(br.readLine());
-		if(num == 2) {
+		if (num == 2) {
 			System.out.println("계좌의 실소유주가 아닙니다");
 			customer.setOwner(false);
 			return false;
@@ -148,7 +148,6 @@ public class AntiMoneyLaundering {
 	public boolean isTeenage(String customerAge) {
 		int birthYear = Integer.parseInt(customerAge.substring(0, 2));
 
-
 		// 현재 연도 가져오기
 		int currentYear = java.time.Year.now().getValue();
 		int age;
@@ -156,12 +155,12 @@ public class AntiMoneyLaundering {
 		if (birthYear <= 24) {
 			// 2000년대 출생자
 			age = currentYear - (2000 + birthYear);
-			// 2024 - (2000 + 05) = 
+			// 2024 - (2000 + 05) =
 		} else {
 			// 1900년대 출생자
 			age = currentYear - (1900 + birthYear);
 		}
-		if(age < 20) {
+		if (age < 20) {
 			return true;
 		}
 		return false;
@@ -169,23 +168,24 @@ public class AntiMoneyLaundering {
 	}
 
 	// 일일 거래 3회 이상 감지
-	public List<Trade> getTradesForToday(Customer customer) {
+	public int getTradesForToday(Customer customer) {
 		LocalDate today = LocalDate.now();
-		return customer.getAccounts().get(0).getTrades().stream()
+		List<Trade> trades = customer.getAccounts().get(0).getTrades().stream()
 				.filter(trade -> trade.getTime().toLocalDate().equals(today)).collect(Collectors.toList());
+		return trades.size();
 	}
 
 	// 고객 확인 만기 여부 체크
 	public boolean checkExpiredCdd(Customer customer) {
-	    LocalDateTime cddDate = customer.getCddDate();
-	    if (cddDate != null) {
-	        LocalDateTime expiryDate = cddDate.plusYears(3);
-	        LocalDateTime currentDate = LocalDateTime.now();
+		LocalDateTime cddDate = customer.getCddDate();
+		if (cddDate != null) {
+			LocalDateTime expiryDate = cddDate.plusYears(3);
+			LocalDateTime currentDate = LocalDateTime.now();
 
-	        if (currentDate.isAfter(expiryDate)) {
-	            return false;
-	        }
-	    }
-	    return true;
+			if (currentDate.isAfter(expiryDate)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
